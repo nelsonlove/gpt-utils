@@ -26,7 +26,7 @@ def leetify(message):
         ('the universe',
          'th3 j00n1v3rs3'),
         ('Nice to meet you.',
-        'nic3 t0 m33t j00.')
+         'nic3 t0 m33t j00.')
     )
     prompt = TuplePrompt(
         examples,
