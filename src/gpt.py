@@ -1,24 +1,24 @@
 import openai
 import os
-
-
-OPENAI_KEY = os.environ.get('OPENAI_KEY')
-
-
-def set_openai_key(key):
-    global OPENAI_KEY
-    OPENAI_KEY = key
-
-
-def requires_key(func):
-    def wrapped(*args, openai_key=None, **kwargs):
-        if openai_key:
-            set_openai_key(openai_key)
-        return func(*args, **kwargs)
-    return wrapped
+from transformers import GPT2Tokenizer
 
 
 class GPT:
+    api_key = os.environ.get('OPENAI_KEY')
+
+    @staticmethod
+    def num_tokens(text):
+        tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+        return len(tokenizer.tokenize(text))
+
+    @classmethod
+    def requires_key(cls, func):
+        def wrapped(*args, openai_key=None, **kwargs):
+            if openai_key:
+                cls.api_key = openai_key
+            return func(*args, **kwargs)
+        return wrapped
+
     def __init__(self,
                  engine='davinci',
                  max_tokens=512,

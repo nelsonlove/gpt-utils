@@ -1,5 +1,4 @@
-from gpt import GPT, TuplePrompt, requires_key
-from transformers import GPT2Tokenizer
+from gpt import GPT, TuplePrompt
 
 
 def strip_quotes(text):
@@ -9,12 +8,7 @@ def strip_quotes(text):
     return text
 
 
-def num_tokens(text):
-    tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
-    return len(tokenizer.tokenize(text))
-
-
-@requires_key
+@GPT.requires_key
 def leetify(message):
     examples = (
         ('Please provide me with a short brief.',
@@ -42,6 +36,7 @@ def leetify(message):
     return GPT(max_tokens=100, stop='\n', temperature=0.1).response(prompt)
 
 
+@GPT.requires_key
 def dechatify(message):
     examples = (
         ('please provide me with a short brief',
