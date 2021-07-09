@@ -1,4 +1,5 @@
 from gpt import GPT, TuplePrompt, requires_key
+from transformers import GPT2Tokenizer
 
 
 def strip_quotes(text):
@@ -6,6 +7,11 @@ def strip_quotes(text):
         quote = text[0]
         text = text.strip(quote)
     return text
+
+
+def num_tokens(text):
+    tokenizer = GPT2Tokenizer.from_pretrained('gpt2-medium')
+    return len(tokenizer.tokenize(text))
 
 
 @requires_key
