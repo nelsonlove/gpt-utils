@@ -1,4 +1,4 @@
-from gpt import GPT, TuplePrompt
+from .gpt import GPT, TuplePrompt
 
 
 def strip_quotes(text):
