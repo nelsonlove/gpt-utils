@@ -6,8 +6,8 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     install_requires=[
-        'openai~=0.8.0',
         'transformers~=4.8.2',
+        'openai~=0.9.3',
     ],
     url='https://github.com/nelsonlove/gpt-utils',
     license='LICENSE.txt',
