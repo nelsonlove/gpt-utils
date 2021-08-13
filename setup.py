@@ -1,4 +1,4 @@
-from setuptools import setup
+import setuptools
 
 import codecs
 from os import path
@@ -24,9 +24,11 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-setup(
+setuptools.setup(
     name='gpt_utils',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    version=get_version("stc/gpt_utils/__init__.py")
+    version=get_version("src/gpt_utils/__init__.py"),
+    package_dir={"": "src"},
+    packages=setuptools.find_packages(where="src"),
 )
