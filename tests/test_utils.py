@@ -10,5 +10,8 @@ class Test(TestCase):
     def test_dechatify(self):
         self.assert_transform(utils.dechatify, 'lol', 'Laughing out loud.')
 
+    def test_fix_case(self):
+        self.assert_transform(utils.dechatify, "Pigeon Racing", "pigeon racing")
+
     def test_leetify(self):
         self.assert_transform(utils.leetify, 'Nice to meet you.', 'nic3 t0 m33t j00.')
