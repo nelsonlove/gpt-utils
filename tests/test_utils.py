@@ -11,7 +11,7 @@ class Test(TestCase):
         self.assert_transform(utils.dechatify, 'lol', 'Laughing out loud.')
 
     def test_fix_case(self):
-        self.assert_transform(utils.fix_case, "Pigeon Racing", "pigeon racing")
+        self.assert_transform(utils.fix_case, 'a japanese restaurant', 'a Japanese restaurant')
 
     def test_generate_stem(self):
         self.assert_transform(utils.generate_stem, "White House", "The White House is")

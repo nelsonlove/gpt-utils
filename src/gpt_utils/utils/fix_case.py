@@ -10,8 +10,9 @@ def fix_case(in_text):
         ("the fbi", "the FBI"),
         ("hall and oates", "Hall and Oates"),
         ("Pigeon Racing", "pigeon racing"),
+        ("The President", "the President"),
         ("st mary", "St. Mary"),
         intro_text="Demonstrate the proper capitalization/punctuation for the phrase as it"
-                   "would be used mid-sentence."
+                   "would be used mid-sentence.",
     )
     return prompt.convert(in_text)
