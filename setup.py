@@ -30,5 +30,6 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     version=get_version("src/gpt_utils/__init__.py"),
     package_dir={"": "src"},
+    setup_requires=["wheel"],
     packages=setuptools.find_packages(where="src"),
 )
