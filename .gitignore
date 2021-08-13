@@ -1,1 +1,4 @@
 /post-commit.sh
+/pyproject.toml
+/etc/
+/dist/

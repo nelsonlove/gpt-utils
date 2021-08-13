@@ -1,2 +1,3 @@
-from .gpt import GPT, TuplePrompt
-from .utils import strip_quotes, dechatify, leetify
+from .core import GPT
+from . import prompt
+from . import utils
