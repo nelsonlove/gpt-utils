@@ -1,4 +1,4 @@
-post-commit.sh
+publish.sh
 pyproject.toml
 /etc/
 /dist/
