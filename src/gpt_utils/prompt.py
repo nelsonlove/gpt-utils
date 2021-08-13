@@ -34,7 +34,7 @@ class ExamplesPrompt(BasePrompt, metaclass=abc.ABCMeta):
                  auto_truncate=False,  # If true, truncate if prompt goes over max_tokens
                  max_tokens=2048,
                  ):
-        self.examples = examples
+        self.examples = list(examples)
         self.labels = labels
         self.intro_text = intro_text
         self.auto_truncate = auto_truncate
