@@ -1,7 +1,6 @@
-from gpt_utils import utils
-
-
 from unittest import TestCase
+
+from gpt_utils import utils
 
 
 class Test(TestCase):
