@@ -1,21 +1,13 @@
-from setuptools import setup, find_packages
+from setuptools import setup
+
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='gpt_utils',
-    version='0.8.0',
-    package_dir={'': 'src'},
-    packages=find_packages(where='src'),
-    install_requires=[
-        'transformers~=4.8.2',
-        'openai~=0.9.3',
-    ],
-    url='https://github.com/nelsonlove/gpt-utils',
-    license='LICENSE.txt',
-    author='Nelson Love',
-    author_email='nelson@nelson.love',
-    description='Collection of utilities for use with GPT-3',
-    project_urls={  # Optional
-        'Bug Reports': 'https://github.com/nelsonlove/gpt-utils/issues',
-        'Source': 'https://github.com/nelsonlove/gpt-utils/',
-    },
+    long_description=long_description,
+    long_description_content_type='text/markdown'
 )
