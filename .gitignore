@@ -2,3 +2,5 @@ post-commit.sh
 pyproject.toml
 /etc/
 /dist/
+/.bump
+/src/gpt_utils.egg-info/
