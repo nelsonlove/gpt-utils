@@ -4,3 +4,4 @@ pyproject.toml
 /dist/
 /.bump
 /src/gpt_utils.egg-info/
+/build/
