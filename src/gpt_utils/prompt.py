@@ -74,7 +74,7 @@ class ExamplesPrompt(BasePrompt, metaclass=abc.ABCMeta):
 
     def format(self, *args, **kwargs):
         formatted = self.text.format(*args, **kwargs)
-        while self.auto_truncate and len(formatted) <= self.max_tokens:
+        while self.auto_truncate and len(formatted) > self.max_tokens:
             self.truncate()
             formatted = self.text.format(*args, **kwargs)
         return formatted
