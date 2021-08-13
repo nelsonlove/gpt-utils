@@ -1,4 +1,4 @@
-from gpt_utils import util
+from gpt_utils import utils
 
 
 from unittest import TestCase
