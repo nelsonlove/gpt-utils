@@ -7,7 +7,6 @@ on: push
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -32,6 +31,8 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
+    - env:
+        - OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: |
         python -m pytest
     - name: Update version number with bump
