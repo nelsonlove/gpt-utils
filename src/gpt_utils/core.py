@@ -15,6 +15,7 @@ class GPT:
         def wrapped(*args, api_key=None, **kwargs):
             if api_key:
                 cls.api_key = api_key
+                openai.api_key = cls.api_key
             return func(*args, **kwargs)
 
         return wrapped
@@ -55,8 +56,11 @@ class GPT:
         self.history = []
         self.log_file = log_file
 
-    @requires_key
-    def response(self, prompt, on_fail=None, max_attempts=3, text_only=True, preview=False):
+    def response(self, prompt, on_fail=None, max_attempts=3, text_only=True, preview=False, api_key=None):
+        if api_key:
+            self.__class__.api_key = api_key
+            openai.api_key = self.api_key
+
         response = None
 
         while max_attempts and not response:
