@@ -11,6 +11,7 @@ class GPT:
     @classmethod
     def requires_key(cls, func):
         """Decorator function which allows passing API key as keyword argument"""
+
         def wrapped(*args, api_key=None, **kwargs):
             if api_key:
                 cls.api_key = api_key
@@ -54,34 +55,43 @@ class GPT:
         self.history = []
         self.log_file = log_file
 
-    def response(self, prompt, on_fail=None, api_key=None, max_attempts=3):
-        if api_key:
-            self.api_key = api_key
-        openai.api_key = self.api_key
-
+    @requires_key
+    def response(self, prompt, on_fail=None, max_attempts=3, text_only=True, preview=False):
         response = None
+
         while max_attempts and not response:
             try:
-                response = self._response(prompt)
+                response = self._response(prompt, preview=preview)
             except openai.error.InvalidRequestError:
                 if not on_fail:
                     raise
                 else:
-                    response = on_fail(prompt)
+                    return on_fail(prompt)
             max_attempts -= 1
 
-        self.history.append((prompt, response))
+        response_text = response['choices'][0]['text'].strip()
+
+        if preview:
+            print(f'Response: {response_text}')
+
+        self.history.append((prompt, response_text))
 
         if self.log_file:
             with open(self.log_file, 'w') as f:
                 # TODO Logging format should be JSON or some other format that makes sense, as a matter of fact
                 #  logging could use some work all around
-                f.write(f'[PROMPT]\n\n{prompt}\n\n[RESPONSE]\n\n{response}\n\n')
+                f.write(f'[PROMPT]\n\n{prompt}\n\n[RESPONSE]\n\n{response_text}\n\n')
 
-        return response
+        return response_text if text_only else response
 
-    def _response(self, prompt):
-        return openai.Completion.create(prompt=str(prompt),
+    def _response(self, prompt, preview=False):
+        prompt = str(prompt).strip()
+
+        if preview:
+            excerpt = prompt[:min(60, len(prompt))]
+            print(f'Querying with prompt: {excerpt + ("..." if len(prompt) > 60 else "")}')
+
+        return openai.Completion.create(prompt=prompt,
                                         engine=self.engine,
                                         max_tokens=self.max_tokens,
                                         temperature=self.temperature,
@@ -94,4 +104,4 @@ class GPT:
                                         presence_penalty=self.presence_penalty,
                                         frequency_penalty=self.frequency_penalty,
                                         best_of=self.best_of,
-                                        logit_bias=self.logit_bias)['choices'][0]['text'].strip()
+                                        logit_bias=self.logit_bias)
