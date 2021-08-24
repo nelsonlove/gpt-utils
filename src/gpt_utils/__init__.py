@@ -8,3 +8,4 @@ from .generate_stem import generate_stem
 from .leetify import leetify
 from . import location
 from . import number
+from . import classify
