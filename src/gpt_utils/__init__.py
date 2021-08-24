@@ -1,4 +1,4 @@
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 from .core import GPT
 from . import prompt
@@ -9,3 +9,4 @@ from .leetify import leetify
 from . import location
 from . import number
 from . import classify
+from .pluralize import pluralize
