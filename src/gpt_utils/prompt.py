@@ -1,4 +1,5 @@
 import abc
+import json
 
 from transformers import GPT2Tokenizer
 
@@ -26,7 +27,7 @@ class BasePrompt(metaclass=abc.ABCMeta):
         return self.text.format(*args, **kwargs)
 
 
-class ExamplesPrompt(BasePrompt, metaclass=abc.ABCMeta):
+class ExamplesPrompt(BasePrompt):
     def __init__(self,
                  *examples,            # Sequence of examples used to build prompt
                  labels=None,          # List of labels used for each example
@@ -43,23 +44,23 @@ class ExamplesPrompt(BasePrompt, metaclass=abc.ABCMeta):
     def truncate(self):
         self.examples = self.examples[1:]
 
+    def _format_example_str(self, example):
+        if type(example) is str:
+            return (self.labels[0] if self.labels else '') + example + '\n'
+        else:
+            example_str = ''
+            for i, item in enumerate(example):
+                example_str += (self.labels[i] + ' ' if self.labels else '') + item + '\n'
+            return example_str
+
     @property
     def text(self):
-        def format_example_str(ex):
-            if type(ex) is str:
-                return (self.labels[0] if self.labels else '') + ex + '\n'
-            else:
-                example_str = ''
-                for i, item in enumerate(ex):
-                    example_str += (self.labels[i] + ' ' if self.labels else '') + item + '\n'
-                return example_str
-
         is_seq = type(self.examples[0]) is not str
 
         prompt = self.intro_text + '\n\n' if self.intro_text else ''
 
         for example in self.examples:
-            prompt += format_example_str(example)
+            prompt += self._format_example_str(example)
             if is_seq:
                 prompt += '\n'
 
@@ -119,3 +120,82 @@ class ConversionPrompt(ExamplesPrompt):
             self.examples = original_examples
             self.labels = original_labels
         return response
+
+
+class MatrixPrompt(BasePrompt):
+    @classmethod
+    def load(cls, file):
+        """Accepts path to a .json file and returns a list of dicts, one for each row"""
+        with open(file, newline='') as f:
+            return json.load(f)
+
+    def __init__(self, data,
+                 output_column=None,
+                 input_columns=None,
+                 label_delimiter=': ',
+                 intro_text=None):
+        self.data = self.load(data) if not isinstance(data, dict) else data
+        self.columns = list(self.data[0].keys())
+        self.output_column = output_column or []
+        self.input_columns = input_columns or []
+        self.label_delimiter = label_delimiter
+        self.intro_text = intro_text
+
+    def _format_example_str(self, example):
+        example_str_list = []
+        for label, value in example:
+            if type(value) is list:
+                value = '|'.join(value)
+            example_str = f'{label}{self.label_delimiter}{value}'
+            example_str_list.append(example_str)
+        return '\n'.join(example_str_list)
+
+    def _example_from_row(self, row):
+        return [[col, row[col]] for col in self.input_columns + [self.output_column]]
+
+    @property
+    def examples(self):
+        return [self._example_from_row(row) for row in self.data]
+
+    @property
+    def text(self):
+        prompt = self.intro_text + '\n\n' if self.intro_text else ''
+
+        for example in self.examples:
+            prompt += self._format_example_str(example) + '\n\n'
+
+        for col in self.input_columns:
+            prompt += col + self.label_delimiter + '{}' + '\n'
+
+        prompt += self.output_column + self.label_delimiter
+
+        return prompt.strip()
+
+    @staticmethod  # I should move this somewhere, it doesn't make sense here
+    def split_list(l_string, delimiter='|'):
+        if delimiter not in l_string and 'none' in l_string.lower():
+            return ['None']
+        else:
+            return [item.strip() for item in l_string.split(delimiter)]
+
+    @GPT.requires_key
+    def predict(self, *input_values,
+                as_list=False,
+                list_delimiter='|',
+                uniques_only=False,
+                **gpt_kwargs
+                ):
+        if not self.output_column:
+            raise Exception('Need to set output column!')
+
+        if 'stop' not in gpt_kwargs:
+            gpt_kwargs['stop'] = '\n'
+        gpt = GPT(**gpt_kwargs)
+
+        prompt = self.format(*input_values)
+        response = gpt.response(prompt)
+        if not as_list:
+            return response
+        else:
+            response_list = self.split_list(response, list_delimiter)
+            return list(set(response_list)) if uniques_only else response_list
