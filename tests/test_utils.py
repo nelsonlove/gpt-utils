@@ -13,6 +13,11 @@ class Test(TestCase):
     def test_leetify(self):
         self.assert_transform(gpt_utils.leetify, 'Nice to meet you.', 'nic3 t0 m33t j00.')
 
+    def test_pluralize(self):
+        self.assert_transform(gpt_utils.pluralize, 'lion', 'lions')
+        self.assert_transform(gpt_utils.pluralize, 'Peach', 'Peaches')
+        self.assert_transform(gpt_utils.pluralize, 'CHILD', 'CHILDREN')
+
     def test_case_title(self):
         self.assert_transform(gpt_utils.case.title, 'a japanese restaurant', 'A Japanese Restaurant')
 
