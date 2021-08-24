@@ -1,5 +1,5 @@
-from gpt_utils import GPT
-from gpt_utils.prompt import ConversionPrompt
+from . import GPT
+from .prompt import ConversionPrompt
 
 
 @GPT.requires_key
