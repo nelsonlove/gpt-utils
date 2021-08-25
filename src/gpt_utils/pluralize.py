@@ -11,8 +11,9 @@ def pluralize(noun):
                               ('MOOSE', 'MOOSE'),
                               ('bear', 'bears'),
                               ('Squirrel', 'Squirrels'),
-                              engine='ada',
+                              ('Fire hydrant', 'Fire hydrants'),
+                              engine='babbage',
                               temperature=0.1,
-                              intro_text="Capitalize and retain case.")
-
+                              intro_text="For each singular noun, provide the plural and retain case.")
+    print(prompt)
     return prompt.convert(noun)
