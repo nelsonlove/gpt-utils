@@ -5,7 +5,7 @@ import gpt_utils
 
 class Test(TestCase):
     def assert_transform(self, func, input_str, output_str):
-        self.assertEqual(func(input_str), output_str)
+        self.assertEqual(output_str, func(input_str))
 
     def test_dechatify(self):
         self.assert_transform(gpt_utils.dechatify, 'lol', 'Laughing out loud.')
@@ -17,6 +17,7 @@ class Test(TestCase):
         self.assert_transform(gpt_utils.pluralize, 'lion', 'lions')
         self.assert_transform(gpt_utils.pluralize, 'Peach', 'Peaches')
         self.assert_transform(gpt_utils.pluralize, 'CHILD', 'CHILDREN')
+        self.assert_transform(gpt_utils.pluralize, 'Tuba', 'Tubas')
 
     def test_case_title(self):
         self.assert_transform(gpt_utils.case.title, 'a japanese restaurant', 'A Japanese Restaurant')

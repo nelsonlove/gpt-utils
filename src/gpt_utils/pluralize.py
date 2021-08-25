@@ -7,13 +7,12 @@ def pluralize(noun):
     prompt = ConversionPrompt('Singular', 'Plural',
                               ('whale', 'whales'),
                               ('Ox', 'Oxen'),
-                              ('moose', 'Moose'),
+                              ('moose', 'moose'),
                               ('MOOSE', 'MOOSE'),
                               ('bear', 'bears'),
                               ('Squirrel', 'Squirrels'),
                               ('Fire hydrant', 'Fire hydrants'),
-                              engine='babbage',
-                              temperature=0.1,
-                              intro_text="For each singular noun, provide the plural and retain case.")
-    print(prompt)
+                              engine='curie',
+                              temperature=0.05,
+                              intro_text="For each singular noun, provide the plural. Retain the case of the original.")
     return prompt.convert(noun)
