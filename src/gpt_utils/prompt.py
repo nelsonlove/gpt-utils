@@ -199,3 +199,21 @@ class MatrixPrompt(BasePrompt):
         else:
             response_list = self.split_list(response, list_delimiter)
             return list(set(response_list)) if uniques_only else response_list
+
+
+class ChatPrompt(ExamplesPrompt):
+    def __init__(self, botname, username, *messages, intro_text=None):
+        super().__init__(
+            *messages,
+            intro_text=intro_text,
+            labels=[username + ':', botname + ':'],
+            auto_truncate=True
+        )
+
+    @property
+    def messages(self):
+        return self.examples
+
+    @messages.setter
+    def messages(self, messages):
+        self.examples = messages

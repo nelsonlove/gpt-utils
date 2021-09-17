@@ -1,4 +1,4 @@
-__version__ = '1.2.2'
+__version__ = '1.4.0'
 
 from .core import GPT
 from . import prompt
